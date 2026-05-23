@@ -1,89 +1,127 @@
-# 🔄 WORKFLOW — Quy trình từng bước
+# 🔄 WORKFLOW — Step-by-step process
 
 ---
 
-## Tổng quan
+## Overview
 
 ```
-PHASE 0: KHỞI TẠO    → Hỏi user → Confirm
-PHASE 1: LẬP KẾ HOẠCH → Tạo TODO.md + REVIEW.md
-PHASE 2: CODE (lặp)    → Feature 1 → 10/10? → Feature 2 → ...
-PHASE 3: KẾT THÚC     → Báo cáo tổng kết
+PHASE 0: INIT          → Gather requirements → Confirm
+PHASE 1: PLANNING      → Break down tasks → Estimate
+PHASE 2: CODE (loop)   → Implement → Review → Merge
+PHASE 3: COMPLETION    → Test → Deploy → Retro
 ```
 
 ---
 
-## PHASE 0: Khởi tạo
+## PHASE 0: Init
 
-### Hỏi user từng câu, chờ trả lời:
+### Gather requirements one at a time:
 
 ```
-1. "Dự án này để làm gì?"
-2. "Công nghệ? (Angular version, LESS/SCSS, Nx?)"
-3. "Cấu trúc thư mục? (monorepo? tên packages?)"
-4. "Các features cần tạo? (liệt kê)"
-5. "Testing? CI/CD? Deploy?"
-6. "Ai maintain?"
+1. "What is the goal of this project/feature?"
+2. "What is the tech stack? (frontend, backend, database, etc.)"
+3. "What are the acceptance criteria?"
+4. "Are there any constraints? (deadline, budget, compliance)"
+5. "Who are the stakeholders?"
 ```
 
-Sau đó confirm lại trước khi qua Phase 1.
+Confirm scope, stack, and timeline before moving to Phase 1.
 
 ---
 
-## PHASE 1: Lập kế hoạch
+## PHASE 1: Planning
 
-### Tạo TODO.md:
+### Create TODO.md:
 
 ```markdown
-- [ ] Feature 1: [tên] — Files: [...], Pattern: [...], Deps: [...]
-- [ ] Feature 2: ...
+## Tasks
+- [ ] Task 1: [description] — Files: [...], Dependencies: [...]
+- [ ] Task 2: [description] — Files: [...], Dependencies: [...]
+- [ ] Task 3: [description] — Files: [...], Dependencies: [...]
+
+## Notes
+- Tech decisions
+- Risks
+- Open questions
 ```
 
-### Tạo REVIEW.md:
+### Estimate each task:
 
-```markdown
-Architecture: ⏳ | Angular: ⏳ | Signals: ⏳ | Template: ⏳
-Styles: ⏳ | TS: ⏳ | Testing: ⏳ | Perf: ⏳ | A11y: ⏳ | Docs: ⏳
-Score: 0/10
-```
+| Task | Effort | Priority |
+|------|--------|----------|
+| Task 1 | Small/Medium/Large | P0/P1/P2 |
+| Task 2 | Small/Medium/Large | P0/P1/P2 |
 
 ---
 
-## PHASE 2: Code (vòng lặp)
+## PHASE 2: Code (loop)
 
-### Cho MỖI feature:
+### For EACH task:
 
 ```
-1. Chọn feature từ TODO (chưa tick)
-2. Phân tích: files? pattern? cần hỏi user?
-3. Code — tạo files, kiểm tra từng file
-4. Kiểm tra: compile (nx build/tsc), lint (eslint) → lỗi thì fix
-5. Tự chấm 10/10 (checklist trong rules.md)
-6. = 10/10? → Tick TODO, update CHANGELOG
-7. < 10/10? → Quay lại bước 3 sửa
-8. Còn feature? → Lặp
+1. Select next task from TODO (unchecked, highest priority)
+2. Plan: which files? which pattern? any blockers?
+3. Implement — write code, tests, docs
+4. Self-review: does it meet acceptance criteria?
+5. Verify: compile, lint, test → fix if failing
+6. ✅ Passes? → Tick TODO, commit
+7. ❌ Fails? → Go back to step 3 and fix
+8. More tasks? → Repeat
 ```
 
-### ⚠️ KHÔNG:
+### Quality gate (per task):
 
-- Code feature mới khi feature cũ chưa 10/10
-- Sửa feature đã hoàn thành
-- Code nhiều features cùng lúc
+| Check | Standard |
+|-------|----------|
+| Tests pass | All unit + integration tests green |
+| Lint clean | Zero warnings |
+| Build succeeds | No compilation errors |
+| Code review | Self-reviewed before PR |
+| Acceptance criteria | Matches requirements from Phase 0 |
+
+### ⚠️ DO NOT:
+
+- Start a new task while current one is incomplete
+- Modify completed tasks without reason
+- Work on multiple tasks in parallel
+- Skip the quality gate
 
 ---
 
-## PHASE 3: Kết thúc
+## PHASE 3: Completion
 
-- Update TODO.md, REVIEW.md, CHANGELOG.md
-- Báo cáo user: features đã xong, score cuối cùng
+### Before declaring done:
+
+1. All tasks checked in TODO.md
+2. Full test suite passes
+3. Documentation updated
+4. CHANGELOG updated
+
+### Post-completion:
+
+- Demo to stakeholders
+- Deploy to staging → verify → production
+- Monitor for errors post-deploy
+- Retro: what went well? what can improve?
 
 ---
 
 ## Flowchart
 
 ```
-User yêu cầu → Hỏi → Confirm
-→ Tạo TODO + REVIEW
-→ [Chọn feature → Code → Kiểm tra → Chấm → <10? sửa → =10? tick]
-→ Báo cáo
+Requirements → Break down → Estimate
+→ [Pick task → Implement → Quality gate → Pass? → Commit]
+→ All done? → Test → Deploy → Retro
 ```
+
+---
+
+## Commit Convention
+
+```
+feat: add user authentication
+fix: resolve login redirect loop
+refactor: extract validation logic
+docs: update API documentation
+test: add auth service unit tests
+chore: update dependencies

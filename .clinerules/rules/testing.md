@@ -31,12 +31,12 @@ describe("TuiFeature", () => {
 
 ## Rules
 
-| #   | Rule                                                     |
-| --- | -------------------------------------------------------- |
-| 1   | Inline host component — KHÔNG file riêng                 |
-| 2   | `TuiPageObject` query DOM                                |
-| 3   | `automation-id` CHÍNH XÁC, không prefix, không transform |
-| 4   | `fixture.detectChanges()` sau mỗi action                 |
-| 5   | Test file co-located: `test/feature-name.spec.ts`        |
-| 6   | Test 3 thứ: render, action, state                        |
-| 7   | Mỗi component public có ComponentHarness                 |
+| #   | Rule                                                      |
+| --- | --------------------------------------------------------- |
+| 1   | Inline host component — NO separate file                  |
+| 2   | `TuiPageObject` queries DOM                               |
+| 3   | `automation-id` EXACT, no prefix, no transform            |
+| 4   | `fixture.detectChanges()` after each action               |
+| 5   | Test file co-located: `test/feature-name.spec.ts`         |
+| 6   | Test 3 things: render, action, state                      |
+| 7   | Each public component has a ComponentHarness              |

@@ -1,48 +1,48 @@
 # 📊 REPORT & CHECKLIST
 
-## 10/10 Checklist (chấm sau mỗi feature)
+## 10/10 Checklist (score after each feature)
 
 ```
-Architecture  (1đ): Phân tầng đúng? Directive ưu tiên? hostDirectives? SOLID?
-Angular       (1đ): input/output? inject? host? OnPush? standalone?
-Signals       (1đ): signal/computed? Không BehaviorSubject? Không method template?
-Template      (1đ): @if/@for? [class]/[style]? trackBy?
-Styles        (1đ): tuiWithStyles? data-*? CSS variables?
-TypeScript    (1đ): readonly? unknown > any? const > let?
-Testing       (1đ): spec co-located? TuiPageObject? automation-id?
-Performance   (1đ): OnPush+signals? computed memoize? lazy loading?
-Accessibility (1đ): Semantic HTML? ARIA? Không bake aria-label?
-Documentation (1đ): index.ts? changelog? TODO updated? REVIEW updated?
+Architecture  (1pt): Correct layering? Directive preferred? hostDirectives? SOLID?
+Angular       (1pt): input/output? inject? host? OnPush? standalone?
+Signals       (1pt): signal/computed? No BehaviorSubject? No method in template?
+Template      (1pt): @if/@for? [class]/[style]? trackBy?
+Styles        (1pt): tuiWithStyles? data-*? CSS variables?
+TypeScript    (1pt): readonly? unknown > any? const > let?
+Testing       (1pt): spec co-located? TuiPageObject? automation-id?
+Performance   (1pt): OnPush+signals? computed memoize? lazy loading?
+Accessibility (1pt): Semantic HTML? ARIA? Don't bake aria-label?
+Documentation (1pt): index.ts? changelog? TODO updated? REVIEW updated?
 
-TỔNG: /10
-= 10 → ✅ Qua feature tiếp
-< 10 → ❌ Sửa ngay, chưa qua
+TOTAL: /10
+= 10 → ✅ Proceed to next feature
+< 10 → ❌ Fix immediately, not yet passed
 ```
 
 ---
 
-## Report sau mỗi feature
+## Report after each feature
 
 ```markdown
 ## 📊 REPORT — [Feature Name]
 
-### Files đã tạo
+### Files created
 
-- `path/file.ts` — [mô tả]
+- `path/file.ts` — [description]
 
-### Patterns áp dụng
+### Patterns applied
 
 - [pattern 1]
 - [pattern 2]
 
 ### Self-review
 
-| #   | Tiêu chí     | Điểm      | Ghi chú |
-| --- | ------------ | --------- | ------- |
-| 1   | Architecture | 1/1       | ...     |
-| 2   | Angular      | 1/1       | ...     |
-| ... | ...          | ...       | ...     |
-|     | **TỔNG**     | **10/10** | ✅      |
+| #   | Criteria     | Score     | Notes |
+| --- | ------------ | --------- | ----- |
+| 1   | Architecture | 1/1       | ...   |
+| 2   | Angular      | 1/1       | ...   |
+| ... | ...          | ...       | ...   |
+|     | **TOTAL**    | **10/10** | ✅    |
 
 ### Changelog
 
@@ -51,10 +51,10 @@ TỔNG: /10
 
 ---
 
-## Files cần update
+## Files to update
 
-| File           | Khi             | Mục đích                |
-| -------------- | --------------- | ----------------------- |
-| `TODO.md`      | Sau mỗi feature | Tick feature hoàn thành |
-| `REVIEW.md`    | Sau mỗi feature | Cập nhật điểm           |
-| `CHANGELOG.md` | Sau mỗi feature | Ghi thay đổi            |
+| File           | When              | Purpose                  |
+| -------------- | ----------------- | ------------------------ |
+| `TODO.md`      | After each feature | Check off completed feature |
+| `REVIEW.md`    | After each feature | Update score             |
+| `CHANGELOG.md` | After each feature | Log changes              |

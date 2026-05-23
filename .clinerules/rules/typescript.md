@@ -1,6 +1,6 @@
 # 📐 TYPESCRIPT RULES
 
-| Rule             | ✅ Đúng                         | ❌ Sai                              |
+| Rule             | ✅ Correct                      | ❌ Wrong                            |
 | ---------------- | ------------------------------- | ----------------------------------- |
 | strict           | `tsconfig: strict: true`        | strict: false                       |
 | readonly         | `readonly size = input<T>()`    | `size = input<T>()`                 |
@@ -8,5 +8,5 @@
 | satisfies > as   | `x satisfies T`                 | `x as T`                            |
 | inference        | `const items = signal<T>([])`   | `const items: WritableSignal<T>...` |
 | explicit returns | `public fn(): T { return ... }` | `public fn() { return ... }`        |
-| const > let      | `const x = 5`                   | `let x = 5` (không reassign)        |
+| const > let      | `const x = 5`                   | `let x = 5` (no reassign)           |
 | arrow callbacks  | `items.map(item => ...)`        | `items.map(function(item) {...})`   |

@@ -1,130 +1,142 @@
-# 🏗️ ARCHITECTURE RULES — Design Patterns & OOP
+# 🏗️ ARCHITECTURE RULES
 
 ---
 
-## COMPONENT DESIGN
+## FRONTEND ARCHITECTURE
 
-### Rule: Ưu tiên directive > component
-
-- Attribute selector `[tuiButton]` **luôn ưu tiên** hơn `tui-button`
-- Directive khi behavior áp dụng lên nhiều element
-- Component khi cần template riêng
-
-### Rule: Phân tầng dependency
+### Layering
 
 ```
-cdk/  → KHÔNG import từ package khác
-core/ → CHỈ import từ cdk/
-kit/  → Import từ cdk/ + core/
+presentation/ → UI components, pages
+domain/       → Business logic, entities, use cases
+data/         → API calls, repositories, models
+shared/       → Common utilities, shared types
 ```
 
-### Rule: Container + Presenter
+| Rule | Description |
+|------|-------------|
+| Dependency direction | Inner layers never import from outer layers |
+| Domain isolation | `domain/` has zero framework imports |
+| Data isolation | `data/` only imports from `domain/` |
+| Presentation | May import from `domain/`, `data/`, `shared/` |
 
-- **Container**: quản lý state, logic
-- **Presenter**: render UI, emit events, KHÔNG business logic
+### Component Design
 
-### Rule: Component size
+| Rule | Description |
+|------|-------------|
+| Single responsibility | One component = one job |
+| Container / Presenter | Split stateful logic from pure rendering |
+| Size limits | .ts ≤ 200 lines, .html ≤ 100 lines → split if exceeded |
+| Composition > inheritance | Compose behavior; avoid `extends` |
+| Dependency injection | Depend on abstractions (interfaces/tokens), not concrete classes |
 
-- .ts ≤ 200 dòng, .html ≤ 100 dòng → vượt thì tách
+### State Management
 
-### Rule: hostDirectives > extends
+| Rule | Description |
+|------|-------------|
+| Single source of truth | One owner per piece of state |
+| Unidirectional flow | State down, events up |
+| Immutable updates | Never mutate state directly |
+| Derived state | Compute from source, don't duplicate |
 
-- Compose behavior qua `hostDirectives`, KHÔNG `extends`
+### File Organization
 
-### Rule: DI token cho global config
-
-- Default options → `InjectionToken<T>` + helper provider function
-
-### Rule: CSS injection
-
-- Attribute selector → `tuiWithStyles(Styles)`
+```
+feature-name/
+├── components/           # UI components
+│   └── feature-card/
+│       ├── feature-card.ts
+│       ├── feature-card.html
+│       └── feature-card.spec.ts
+├── services/             # Business logic
+│   └── feature.service.ts
+├── models/               # Types & interfaces
+│   └── feature.model.ts
+├── index.ts              # Public API
+└── README.md             # Feature docs
+```
 
 ---
 
-## SOLID PRINCIPLES
+## BACKEND ARCHITECTURE
 
-| Principle                 | Áp dụng                                                              |
-| ------------------------- | -------------------------------------------------------------------- |
-| **S**ingle Responsibility | 1 component = 1 việc. Tách logic ra service/directive                |
-| **O**pen/Closed           | Mở cho extension: `input()`, `hostDirectives`. Đóng cho modification |
-| **L**iskov Substitution   | Directive có thể thay thế nhau không gây lỗi                         |
-| **I**nterface Segregation | Token nhỏ, không 1 token khổng lồ                                    |
-| **D**ependency Inversion  | Phụ thuộc vào abstraction: `inject(Token)`, không `new Service()`    |
+### Layering
+
+```
+routes/       → HTTP handlers, request/response mapping
+services/     → Business logic, use cases
+repositories/ → Data access, database queries
+models/       → Entities, DTOs, schemas
+middleware/   → Auth, logging, validation, rate limiting
+shared/       → Common utilities, types
+```
+
+| Rule | Description |
+|------|-------------|
+| Routes are thin | Routes only parse requests, call services, return responses |
+| Business logic in services | All domain rules live in the service layer |
+| Repositories are the data boundary | No raw SQL or ORM calls outside repositories |
+| Downward dependency | `routes → services → repositories` only |
+
+### API Design
+
+| Rule | Description |
+|------|-------------|
+| RESTful conventions | Use nouns for resources, HTTP methods for actions |
+| Consistent response format | All endpoints return the same envelope shape |
+| Versioning | `/api/v1/...` prefix |
+| Pagination | Return `total`, `page`, `pageSize` for list endpoints |
+| Error responses | Standard error format with `code`, `message`, `details` |
+
+### Database
+
+| Rule | Description |
+|------|-------------|
+| Migrations checked in | All schema changes are versioned |
+| Never auto-sync | No automatic schema sync in production |
+| Indexes are intentional | Add indexes based on query patterns, not guesses |
+| Backup strategy | Automated backups with verified restore process |
 
 ---
 
-## DESIGN PATTERNS
+## GENERAL PRINCIPLES
 
-### Pattern 1: Decorator (Attribute Directive)
+### SOLID
 
-```typescript
-// Button behavior decorate lên native element
-@Directive({ selector: '[tuiButton]' })
-export class TuiButton { ... }
-```
+| Principle | Application |
+|-----------|-------------|
+| **S**ingle Responsibility | 1 module / 1 class = 1 reason to change |
+| **O**pen/Closed | Open for extension, closed for modification |
+| **L**iskov Substitution | Subtypes must be substitutable for their base types |
+| **I**nterface Segregation | Small, focused interfaces > large, general ones |
+| **D**ependency Inversion | Depend on abstractions, not concretions |
 
-### Pattern 2: Composite (hostDirectives)
+### Module / Package Design
 
-```typescript
-@Directive({
-    selector: '[tuiButton]',
-    hostDirectives: [TuiWithAppearance, TuiWithIcons], // Compose behaviors
-})
-```
+| Rule | Description |
+|------|-------------|
+| High cohesion | Things that change together stay together |
+| Low coupling | Minimize inter-module dependencies |
+| Public API | Each module exposes only what's needed via barrel exports |
+| Circular deps | Forbidden — detected at build time |
+| Feature-based | Group by feature, not by type |
 
-### Pattern 3: Strategy (Token Providers)
+### Error Handling
 
-```typescript
-// Cấu hình khác nhau cho cùng 1 component
-{ provide: TUI_BUTTON_OPTIONS, useValue: { size: 'l' } }
-```
+| Rule | Description |
+|------|-------------|
+| Fail early | Validate inputs at boundaries |
+| User-friendly | Catch errors at UI layer, show meaningful messages |
+| Log thoroughly | Log errors with context at the data/service layer |
+| Retry & degrade | Handle transient failures gracefully |
+| Never swallow | At minimum, log every caught error |
 
-### Pattern 4: Observer (Signals)
+### Security
 
-```typescript
-// Signals thay thế Observable cho state
-readonly count = computed(() => this.items().length);
-```
-
-### Pattern 5: Factory (InjectionToken factory)
-
-```typescript
-export const TUI_BUTTON_OPTIONS = new InjectionToken("...", {
-  factory: () => ({ size: "m", appearance: "primary" }),
-});
-```
-
-### Pattern 6: Singleton (Service)
-
-```typescript
-@Injectable({ providedIn: 'root' })
-export class TuiNotificationService { ... }
-```
-
-### Pattern 7: Template Method (Base Directive)
-
-```typescript
-@Directive()
-export abstract class TuiAbstractDropdown {
-    protected abstract getContent(): TemplateRef<unknown>;
-    open(): void { ... } // Template method
-}
-```
-
-### Pattern 8: Adapter (ControlValueAccessor)
-
-```typescript
-// Adapt Angular Forms vào component
-export class TuiInput implements ControlValueAccessor { ... }
-```
-
-### Pattern 9: Facade (Service layer)
-
-```typescript
-// Service ẩn complexity bên trong
-export class TuiDialogService {
-  open(component: Type<unknown>): void {
-    /* portal + overlay logic */
-  }
-}
-```
+| Rule | Description |
+|------|-------------|
+| Validate all input | Never trust client-side validation alone |
+| Least privilege | Services and users get minimum necessary permissions |
+| Secrets in config | No secrets in source code; use environment variables or vault |
+| HTTPS everywhere | Enforce HTTPS in production |
+| CORS is explicit | Whitelist origins, never use wildcard in production |
